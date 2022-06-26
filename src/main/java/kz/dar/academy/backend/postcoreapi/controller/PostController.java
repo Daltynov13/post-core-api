@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import kz.dar.academy.backend.postcoreapi.model.PostModel;
 import kz.dar.academy.backend.postcoreapi.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/post")
 public class PostController {
 
-
+  @Autowired
+  private Environment env;
   @Autowired
   private PostService postService;
+
+  @GetMapping("/check")
+  public String checkPostCoreApi() {
+    return "Service is WORKING at " + env.getProperty("local.server.port");
+  }
 
   @PostMapping
   public ResponseEntity<String> createPost(@Valid @RequestBody PostModel post) {
