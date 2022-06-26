@@ -21,22 +21,22 @@ public class PostServiceImpl implements PostService {
         PostModel.builder()
             .postId(id)
             .postItem("Пазл")
-            .postRecipientId(randomUUID().toString())
-            .clientId(randomUUID().toString())
+            .postRecipientId("1")
+            .clientId("2")
             .status("FAILED").build());
     postMap.put(id1,
         PostModel.builder()
             .postId(id1)
             .postItem("Мягкая игрушка")
-            .postRecipientId(randomUUID().toString())
-            .clientId(randomUUID().toString())
+            .postRecipientId("2")
+            .clientId("3")
             .status("SUCCESS").build());
     postMap.put(id2,
         PostModel.builder()
             .postId(id2)
             .postItem("Фонарик")
-            .postRecipientId(randomUUID().toString())
-            .clientId(randomUUID().toString())
+            .postRecipientId("3")
+            .clientId("1")
             .status("FAILED").build());
   }
 

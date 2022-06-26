@@ -29,7 +29,7 @@ public class PostController {
 
   @GetMapping("/check")
   public String checkPostCoreApi() {
-    return "Service is WORKING at " + env.getProperty("local.server.port");
+    return "Post service is WORKING at " + env.getProperty("local.server.port");
   }
 
   @PostMapping
@@ -44,12 +44,12 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public PostModel getPost(@PathVariable String postId) {
+  public PostModel getPostById(@PathVariable String postId) {
     return postService.getPostById(postId);
   }
 
   @PutMapping("/{postId}")
-  public ResponseEntity<String> updatePost(@PathVariable String postId,
+  public ResponseEntity<String> updatePostById(@PathVariable String postId,
       @Valid @RequestBody PostModel post) {
     postService.updatePostById(postId, post);
     return new ResponseEntity<>("Successful updated", OK);
@@ -57,7 +57,7 @@ public class PostController {
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> deletePost(@PathVariable String postId) {
+  public ResponseEntity<String> deletePostById(@PathVariable String postId) {
     postService.deletePostById(postId);
     return new ResponseEntity<>("Successful deleted", OK);
   }
