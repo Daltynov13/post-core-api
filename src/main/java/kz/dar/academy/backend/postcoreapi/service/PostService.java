@@ -1,17 +1,18 @@
 package kz.dar.academy.backend.postcoreapi.service;
 
 import java.util.List;
-import kz.dar.academy.backend.postcoreapi.model.PostModel;
+import kz.dar.academy.backend.postcoreapi.model.PostRequest;
+import kz.dar.academy.backend.postcoreapi.model.PostResponse;
 
 public interface PostService {
 
-  void createPost(PostModel post);
+  PostResponse createPost(PostRequest post);
 
-  List<PostModel> getAllPosts();
+  List<PostResponse> getAllPosts();
 
-  PostModel getPostById(String postId);
+  PostResponse getPostById(String postId);
 
-  void updatePostById(String postId, PostModel post);
+  void updatePostById(String postId, PostRequest post);
 
   void deletePostById(String postId);
 }

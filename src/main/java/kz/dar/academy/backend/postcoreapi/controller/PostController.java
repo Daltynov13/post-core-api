@@ -4,7 +4,8 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
 import javax.validation.Valid;
-import kz.dar.academy.backend.postcoreapi.model.PostModel;
+import kz.dar.academy.backend.postcoreapi.model.PostRequest;
+import kz.dar.academy.backend.postcoreapi.model.PostResponse;
 import kz.dar.academy.backend.postcoreapi.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -33,24 +34,24 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<String> createPost(@Valid @RequestBody PostModel post) {
+  public ResponseEntity<String> createPost(@Valid @RequestBody PostRequest post) {
     postService.createPost(post);
     return new ResponseEntity<>("Successful created", OK);
   }
 
   @GetMapping("/all")
-  public List<PostModel> getAllPosts() {
+  public List<PostResponse> getAllPosts() {
     return postService.getAllPosts();
   }
 
   @GetMapping("/{postId}")
-  public PostModel getPostById(@PathVariable String postId) {
+  public PostResponse getPostById(@PathVariable String postId) {
     return postService.getPostById(postId);
   }
 
   @PutMapping("/{postId}")
   public ResponseEntity<String> updatePostById(@PathVariable String postId,
-      @Valid @RequestBody PostModel post) {
+      @Valid @RequestBody PostRequest post) {
     postService.updatePostById(postId, post);
     return new ResponseEntity<>("Successful updated", OK);
 

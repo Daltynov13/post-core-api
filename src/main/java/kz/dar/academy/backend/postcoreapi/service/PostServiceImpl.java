@@ -1,69 +1,63 @@
 package kz.dar.academy.backend.postcoreapi.service;
 
 import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+import static org.modelmapper.convention.MatchingStrategies.STRICT;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import kz.dar.academy.backend.postcoreapi.model.PostModel;
+import kz.dar.academy.backend.postcoreapi.model.PostEntity;
+import kz.dar.academy.backend.postcoreapi.model.PostRequest;
+import kz.dar.academy.backend.postcoreapi.model.PostResponse;
+import kz.dar.academy.backend.postcoreapi.repository.PostRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PostServiceImpl implements PostService {
 
-  private static final HashMap<String, PostModel> postMap = new HashMap<>();
+  @Autowired
+  private PostRepository postRepository;
+
+  static ModelMapper modelMapper = new ModelMapper();
 
   static {
-    String id = randomUUID().toString();
-    String id1 = randomUUID().toString();
-    String id2 = randomUUID().toString();
-    postMap.put(id,
-        PostModel.builder()
-            .postId(id)
-            .postItem("Пазл")
-            .postRecipientId("1")
-            .clientId("2")
-            .status("FAILED").build());
-    postMap.put(id1,
-        PostModel.builder()
-            .postId(id1)
-            .postItem("Мягкая игрушка")
-            .postRecipientId("2")
-            .clientId("3")
-            .status("SUCCESS").build());
-    postMap.put(id2,
-        PostModel.builder()
-            .postId(id2)
-            .postItem("Фонарик")
-            .postRecipientId("3")
-            .clientId("1")
-            .status("FAILED").build());
+    modelMapper.getConfiguration().setMatchingStrategy(STRICT);
   }
 
-  @Override
-  public void createPost(PostModel post) {
+  public PostResponse createPost(PostRequest post) {
     post.setPostId(randomUUID().toString());
-    postMap.put(post.getPostId(), post);
+    PostEntity entity = modelMapper.map(post, PostEntity.class);
+    postRepository.save(entity);
+    return modelMapper.map(entity, PostResponse.class);
   }
 
   @Override
-  public List<PostModel> getAllPosts() {
-    return new ArrayList<>(postMap.values());
+  public List<PostResponse> getAllPosts() {
+    return stream(postRepository.findAll().spliterator(), false)
+        .map(post -> modelMapper.map(post, PostResponse.class))
+        .collect(toList());
   }
 
   @Override
-  public PostModel getPostById(String postId) {
-    return postMap.get(postId);
+  public PostResponse getPostById(String postId) {
+    return modelMapper
+        .map(postRepository.findByPostId(postId), PostResponse.class);
   }
 
   @Override
-  public void updatePostById(String postId, PostModel post) {
-    post.setPostId(randomUUID().toString());
-    postMap.put(postId, post);
+  public void updatePostById(String postId, PostRequest post) {
+    PostEntity dbEntity = postRepository.findByPostId(postId);
+
+    PostEntity entity = modelMapper.map(post, PostEntity.class);
+    entity.setId(dbEntity.getId());
+
+    postRepository.save(entity);
   }
 
   @Override
   public void deletePostById(String postId) {
-    postMap.remove(postId);
+    postRepository.deleteByPostId(postId);
   }
 }
